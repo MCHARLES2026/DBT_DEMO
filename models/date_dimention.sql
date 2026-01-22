@@ -10,12 +10,9 @@ with CTE as (
     THEN 'WEEKEND'
     ELSE 'BUSINESSDAY'
     END AS DAY_TYPE,
-    CASE WHEN MONTH(TO_TIMESTAMP(STARTED_AT)) in (12,1,2) 
-    then 'winter'
-    WHEN MONTH(TO_TIMESTAMP(STARTED_AT)) in (6,7,8)
-    THEN 'SUMMER'
-    ELSE 'AUTUMN'
-    END AS STATION_OF_YEAR
+  
+  {{ get_season('STARTED_AT') }} as SEASON_OF_YEAR
+
         from {{ source('demo', 'BIKE') }}
     where STARTED_AT != 'STARTED_AT'
 )
