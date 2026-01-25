@@ -1,22 +1,20 @@
 with CTE as (
-    SELECT
-    TO_TIMESTAMP(STARTED_AT)  AS STARTED_AT,
-    DATE(TO_TIMESTAMP(STARTED_AT) ) AS DATE_STARTED_AT,
-    HOUR(TO_TIMESTAMP(STARTED_AT) ) AS HOUR_STARTED_AT,
-    DAYNAME(TO_TIMESTAMP(STARTED_AT) ) AS DAYNAME,
+    select
+        try_to_timestamp(replace(started_at, '"', '')) as started_at,
+        date(try_to_timestamp(replace(started_at, '"', ''))) as date_started_at,
+        hour(try_to_timestamp(replace(started_at, '"', ''))) as hour_started_at,
+        dayname(try_to_timestamp(replace(started_at, '"', ''))) as dayname,
 
-    CASE 
-    WHEN DAYNAME(TO_TIMESTAMP(STARTED_AT) ) IN ('Sat','Sun') 
-    THEN 'WEEKEND'
-    ELSE 'BUSINESSDAY'
-    END AS DAY_TYPE,
-  
-  {{ get_season('STARTED_AT') }} as SEASON_OF_YEAR
+        case
+            when dayname(try_to_timestamp(replace(started_at, '"', ''))) in ('Sat', 'Sun') then 'WEEKEND'
+            else 'BUSINESSDAY'
+        end as day_type,
 
-        from {{ source('demo', 'BIKE') }}
-    where STARTED_AT != 'STARTED_AT'
+        {{ get_season("replace(started_at, '\"', '')") }} as season_of_year
+    from {{ ref('stg_bike') }}
+    where started_at <> 'STARTED_AT'
 )
 
-select 
-*
+select
+    *
 from CTE

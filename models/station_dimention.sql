@@ -6,7 +6,7 @@ with CTE as (
         start_station_name,
         start_lat,
         start_lng
-    from {{ source('demo', 'BIKE') }}
+    from {{ ref('stg_bike') }}
 limit 10
 
 )
