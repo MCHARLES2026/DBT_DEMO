@@ -1,8 +1,8 @@
 sources:
   - name: demo
-    database: demo  
-    schema: demo_schema  
+    database: DEMO  
+    schema: DEMO_SCHEMA  
     tables:
-      - name: bike
-      - name: weather
+      - name: BIKE
+      - name: WEATHER
 
